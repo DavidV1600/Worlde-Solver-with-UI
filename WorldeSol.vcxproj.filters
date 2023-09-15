@@ -35,12 +35,4 @@
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="ceva.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="ceva2.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-  </ItemGroup>
 </Project>

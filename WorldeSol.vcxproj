@@ -140,10 +140,6 @@
   <ItemGroup>
     <None Include="cuvinte.in" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="ceva.txt" />
-    <Text Include="ceva2.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

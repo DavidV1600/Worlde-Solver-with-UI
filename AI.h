@@ -8,29 +8,18 @@
 
 using namespace std;
 ifstream ffin("cuvinte.in");
-ofstream ffout("cuvinte.out");
-//ofstream gout("C:\\Users\\maria\\Desktop\\ASC DUS-INTORS\\fisiere\\ceva.txt");///ceva e unde pun cuvantul incercat
-//ifstream gin("C:\\Users\\maria\\Desktop\\ASC DUS-INTORS\\fisiere\\ceva2.txt");///ceva2 e unde pun rezultatu
-fstream ggout;
-fstream ggin;
 
 int pas = 0;
 int alimita = 11453;
 int alimita2 = 11453;
 char acuv[12000][6];///matricea cu cuvinte
 char acuv2[12000][6];///copie pentru incercari matricea cu cuvinte
-char asolutie[6];///nu stiu dc e aici
-int aapar[300];///vector pt litere si aparitii, daca o sa fie nevoie
 char acuvant_entropic[6];///cuvantul cel mai entropic per stage
 double aentropie_max = 0;///entropia maxima per stage
 double apos_lit[30][6];///posibilitatea [litera]/[pozitie]
 char acopie_cuv[12000][6];
-unordered_map<string, int>pl;
 double pos_lit_tot[30];
 unordered_map<char, int>folosit;
-double mediaJOC = 0;
-int pasi = 0;
-int nr = 0;
 
 
 double aentropie(double aposibilitate)///functie de calculat entropia pentru posibilitate
@@ -110,7 +99,6 @@ void agaseste_entropie()///functia de gasit cel mai bun cuvant entropic per stag
     {
         strcpy(acuvant_entropic, acuv[0]);
     }
-    ffout << acuvant_entropic << '\n' << '\n';
 
 }
 
@@ -200,7 +188,6 @@ string start_AI(string arezultat)
 {
     if (arezultat == "") {
         abag();
-        pl[""]++;
     }
     baga_pos_2();
     gaseste_super();

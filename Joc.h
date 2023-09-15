@@ -8,29 +8,12 @@
 
 using namespace std;
 ifstream fin("cuvinte.in");
-//ofstream file("filename.txt"); // Without append
-
-ofstream fout("cuvinte.out");
-//ifstream gin("C:\\Users\\maria\\Desktop\\ASC DUS-INTORS\\fisiere\\ceva.txt");///ceva e unde pun cuvantul incercat
-//ofstream gout("C:\\Users\\maria\\Desktop\\ASC DUS-INTORS\\fisiere\\ceva2.txt");///ceva2 e unde pun rezultatu
-fstream gin;
-fstream gout;
 
 int limita = 11453;
-int limita2 = 11453;
 char cuv[12000][6];///matricea cu cuvinte
-char cuv2[12000][6];///copie pentru incercari matricea cu cuvinte
 char solutie[6];///nu stiu dc e aici
 int apar[300];///vector pt litere si aparitii, daca o sa fie nevoie
-char cuvant_entropic[6];///cuvantul cel mai entropic per stage
-double entropie_max = 0;///entropia maxima per stage
-double pos_lit[30][6];///posibilitatea [litera]/[pozitie]
-char copie_cuv[12000][6];
-char ant[6];
 unordered_map<string, int>pls;///mapa de cuvinte folosite
-int mod = 0;/// mod=0 cand joaca cu botul si mod=1 cand joaca jucatorul
-char la_misto[6];
-
 
 double entropie(double posibilitate)///functie de calculat entropia pentru posibilitate
 {
@@ -44,7 +27,6 @@ void bag()///bag cuvintele in matrice
     {
         fin >> cuvant;
         strcpy(cuv[i], cuvant);
-        strcpy(cuv2[i], cuvant);
     }
 }
 
@@ -75,16 +57,6 @@ string Joc_Om(string cuvant_incercat)///functia de jucat ca persoana
     if (pls[incerc] == 1)
         pasi++;
 
-    /*for (int i = 0; i <= limita; ++i)
-    {
-        if (strcmp(incerc, cuv[i]) == 0)
-            ebun = 1;
-    }
-    if (ebun == 0)
-    {
-        return "Invalid";
-    }
-    */
     
     for (int i = 0; i <= 4; ++i)
     {
@@ -99,19 +71,6 @@ string Joc_Om(string cuvant_incercat)///functia de jucat ca persoana
     return convertitor;
 }
 
-
-void posib()
-{
-    for (int i = 0; i <= 25; ++i)
-    {
-        cout << char(i + 'A') << " ";
-        for (int j = 0; j <= 4; ++j)
-            cout << pos_lit[i][j] << " ";
-        cout << '\n';
-    }
-}
-
-
 void Genereaza_Cuvant()
 {
 
@@ -119,7 +78,6 @@ void Genereaza_Cuvant()
 
     bag();
 
-    //test();
     genereaza_cuv();
 
 }

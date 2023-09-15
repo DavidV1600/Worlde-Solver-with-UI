@@ -48,7 +48,10 @@ namespace WorldeSol {
 
 	private: System::Windows::Forms::Button^ start_Button;
 	private: System::Windows::Forms::CheckBox^ bot_ActivationButton;
-	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::Button^ T;
+
+
+
 
 
 	private: System::Windows::Forms::Label^ Letter_1;
@@ -85,7 +88,7 @@ namespace WorldeSol {
 			this->guesses_WordValue = (gcnew System::Windows::Forms::TextBox());
 			this->start_Button = (gcnew System::Windows::Forms::Button());
 			this->bot_ActivationButton = (gcnew System::Windows::Forms::CheckBox());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->T = (gcnew System::Windows::Forms::Button());
 			this->Letter_1 = (gcnew System::Windows::Forms::Label());
 			this->Letter_2 = (gcnew System::Windows::Forms::Label());
 			this->Letter_3 = (gcnew System::Windows::Forms::Label());
@@ -160,17 +163,17 @@ namespace WorldeSol {
 			this->bot_ActivationButton->Text = L"Activate Bot";
 			this->bot_ActivationButton->UseVisualStyleBackColor = true;
 			// 
-			// button1
+			// T
 			// 
-			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->T->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button1->Location = System::Drawing::Point(517, 314);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(142, 44);
-			this->button1->TabIndex = 7;
-			this->button1->Text = L"Try Word";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
+			this->T->Location = System::Drawing::Point(517, 314);
+			this->T->Name = L"T";
+			this->T->Size = System::Drawing::Size(142, 44);
+			this->T->TabIndex = 7;
+			this->T->Text = L"Try Word";
+			this->T->UseVisualStyleBackColor = true;
+			this->T->Click += gcnew System::EventHandler(this, &MainForm::button1_Click);
 			// 
 			// Letter_1
 			// 
@@ -245,7 +248,7 @@ namespace WorldeSol {
 			this->Controls->Add(this->Letter_3);
 			this->Controls->Add(this->Letter_2);
 			this->Controls->Add(this->Letter_1);
-			this->Controls->Add(this->button1);
+			this->Controls->Add(this->T);
 			this->Controls->Add(this->bot_ActivationButton);
 			this->Controls->Add(this->start_Button);
 			this->Controls->Add(this->guesses_WordValue);
@@ -265,47 +268,47 @@ namespace WorldeSol {
 
 		if (bot_ActivationButton->Checked == false)
 		{
-			Genereaza_Cuvant();
+			Generate_Random_Word();
 		}
 		else
 		{
-			string cuvant_incercat = "";
-			Genereaza_Cuvant();
-			string cuvant_review = "";
-			while (cuvant_review != "CCCCC") {
-				cuvant_incercat = start_AI(cuvant_review);
-				cuvant_review = Joc_Om(cuvant_incercat);
-				ataieposibilitati(cuvant_incercat, cuvant_review);
-				System::String^ try_word = marshal_as<System::String^>(cuvant_incercat);
-				System::String^ review = marshal_as<System::String^>(cuvant_review);
+			string word_guess = "";
+			Generate_Random_Word();
+			string word_review = "";
+			while (word_review != "CCCCC") {
+				word_guess = start_AI(word_review);
+				word_review = Play(word_guess);
+				delete_impossible_words(word_guess, word_review);
+				System::String^ try_word = marshal_as<System::String^>(word_guess);
+				System::String^ review = marshal_as<System::String^>(word_review);
 				Color_Letters(review, try_word);
 				
 			}
-			System::String^ try_word = marshal_as<System::String^>(cuvant_incercat);
+			System::String^ try_word = marshal_as<System::String^>(word_guess);
 			Letter_1->Text = System::Convert::ToString(try_word[0]);
 			Letter_2->Text = System::Convert::ToString(try_word[1]);
 			Letter_3->Text = System::Convert::ToString(try_word[2]);
 			Letter_4->Text = System::Convert::ToString(try_word[3]);
 			Letter_5->Text = System::Convert::ToString(try_word[4]);
 			
-			System::String^ Update_Number = System::Convert::ToString(pas);
+			System::String^ Update_Number = System::Convert::ToString(number_of_tries);
 			number_OfGuesses->Text = System::Convert::ToString(Update_Number);
 		}
 	}
 
 private:
-	void Color_Letters(System::String^ rezultat, System::String^ cuvant)
+	void Color_Letters(System::String^ word_review, System::String^ word_guess)
 	{
 		Label^ Let1 = gcnew Label();
 		Label^ Let2 = gcnew Label();
 		Label^ Let3 = gcnew Label();
 		Label^ Let4 = gcnew Label();
 		Label^ Let5 = gcnew Label();
-		Let1->Text = System::Convert::ToString(cuvant[0]);
-		Let2->Text = System::Convert::ToString(cuvant[1]);
-		Let3->Text = System::Convert::ToString(cuvant[2]);
-		Let4->Text = System::Convert::ToString(cuvant[3]);
-		Let5->Text = System::Convert::ToString(cuvant[4]);
+		Let1->Text = System::Convert::ToString(word_guess[0]);
+		Let2->Text = System::Convert::ToString(word_guess[1]);
+		Let3->Text = System::Convert::ToString(word_guess[2]);
+		Let4->Text = System::Convert::ToString(word_guess[3]);
+		Let5->Text = System::Convert::ToString(word_guess[4]);
 		Let1->Size = System::Drawing::Size(20, 20);
 		Let2->Size = System::Drawing::Size(20, 20);
 		Let3->Size = System::Drawing::Size(20, 20);
@@ -314,47 +317,47 @@ private:
 
 
 		System::String^ color;
-		if (rezultat[0] == 'G')
+		if (word_review[0] == 'G')
 			color = "red";
-		else if (rezultat[0] == 'C')
+		else if (word_review[0] == 'C')
 			color = "green";
-		else if (rezultat[0] == 'A')
+		else if (word_review[0] == 'A')
 			color = "yellow";
 		Letter_1->BackColor = System::Drawing::Color::FromName(color);
 		Let1->BackColor = System::Drawing::Color::FromName(color);
 
-		if (rezultat[1] == 'G')
+		if (word_review[1] == 'G')
 			color = "red";
-		else if (rezultat[1] == 'C')
+		else if (word_review[1] == 'C')
 			color = "green";
-		else if (rezultat[1] == 'A')
+		else if (word_review[1] == 'A')
 			color = "yellow";
 		Letter_2->BackColor = System::Drawing::Color::FromName(color);
 		Let2->BackColor = System::Drawing::Color::FromName(color);
 
-		if (rezultat[2] == 'G')
+		if (word_review[2] == 'G')
 			color = "red";
-		else if (rezultat[2] == 'C')
+		else if (word_review[2] == 'C')
 			color = "green";
-		else if (rezultat[2] == 'A')
+		else if (word_review[2] == 'A')
 			color = "yellow";
 		Letter_3->BackColor = System::Drawing::Color::FromName(color);
 		Let3->BackColor = System::Drawing::Color::FromName(color);
 
-		if (rezultat[3] == 'G')
+		if (word_review[3] == 'G')
 			color = "red";
-		else if (rezultat[3] == 'C')
+		else if (word_review[3] == 'C')
 			color = "green";
-		else if (rezultat[3] == 'A')
+		else if (word_review[3] == 'A')
 			color = "yellow";
 		Letter_4->BackColor = System::Drawing::Color::FromName(color);
 		Let4->BackColor = System::Drawing::Color::FromName(color);
 
-		if (rezultat[4] == 'G')
+		if (word_review[4] == 'G')
 			color = "red";
-		else if (rezultat[4] == 'C')
+		else if (word_review[4] == 'C')
 			color = "green";
-		else if (rezultat[4] == 'A')
+		else if (word_review[4] == 'A')
 			color = "yellow";
 		Letter_5->BackColor = System::Drawing::Color::FromName(color);
 		Let5->BackColor = System::Drawing::Color::FromName(color);
@@ -375,9 +378,9 @@ private:
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 	System::String^ managedString = guesses_WordValue->Text;
 	std::string try_word = marshal_as<std::string>(managedString);
-	string rezultat = Joc_Om(try_word);
-	if (rezultat != "Invalid") {
-		System::String^ rezultatManaged = marshal_as<System::String^>(rezultat);
+	string word_review = Play(try_word);
+	if (word_review != "Invalid") {
+		System::String^ word_reviewManaged = marshal_as<System::String^>(word_review);
 		Letter_1->Text = System::Convert::ToString(managedString[0]);
 		Letter_2->Text = System::Convert::ToString(managedString[1]);
 		Letter_3->Text = System::Convert::ToString(managedString[2]);
@@ -390,9 +393,9 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 		System::String^ Update_Number = System::Convert::ToString(number_Of_Guesses_Value);
 		number_OfGuesses->Text = System::Convert::ToString(Update_Number);
 
-		Color_Letters(rezultatManaged, managedString);
+		Color_Letters(word_reviewManaged, managedString);
 
-		if (rezultat == "CCCCC")
+		if (word_review == "CCCCC")
 			System::Windows::Forms::MessageBox::Show("Congratulations!");
 	}
 	else

@@ -9,75 +9,59 @@
 using namespace std;
 ifstream fin("cuvinte.in");
 
-int limita = 11453;
-char cuv[12000][6];///matricea cu cuvinte
-char solutie[6];///nu stiu dc e aici
-int apar[300];///vector pt litere si aparitii, daca o sa fie nevoie
-unordered_map<string, int>pls;///mapa de cuvinte folosite
+int number_of_words = 11453;
+char words_matrix[12000][6];///matricea cu words_matrixinte
+char solution_word[6];///nu stiu dc e aici
+int frequnce_array_letters[300];///vector pt litere si frequnce_array_lettersitii, daca o sa fie nevoie
+unordered_map<string, int>used_words;///mapa de words_matrixinte folosite
 
-double entropie(double posibilitate)///functie de calculat entropia pentru posibilitate
+void Read_words()///read_words words_matrixintele in matrice
 {
-    return posibilitate * log2(1 / posibilitate);
-}
-
-void bag()///bag cuvintele in matrice
-{
-    char cuvant[6];
+    char word[6];
     for (int i = 0; i <= 11453; ++i)
     {
-        fin >> cuvant;
-        strcpy(cuv[i], cuvant);
+        fin >> word;
+        strcpy(words_matrix[i], word);
     }
 }
 
-void genereaza_cuv()///functie de generat un cuvant random
+void Generate_solution()///functie de generat un word random
 {
-    int susta = rand() % limita + 1;
-    // cout<<susta<<'\n';
-    strcpy(solutie, cuv[susta]);
-    //  cout<<solutie<<'\n';
+    int random_word = rand() % number_of_words + 1;
+    strcpy(solution_word, words_matrix[random_word]);
     for (int i = 0; i <= 4; ++i)
-        apar[solutie[i]]++;
-    /*for(int i=0;i<=30;++i)
-        if(apar[i])
-        cout<<apar[i]<<" ";*/
-
+        frequnce_array_letters[solution_word[i]]++;
 }
 
-string Joc_Om(string cuvant_incercat)///functia de jucat ca persoana
+string Play(string try_word)///functia de jucat ca persoana
 {
-    pls[""]++;  ///aici tre sa vad daca bag mapa de cuvinte folosite la WHILE
-    char incerc[6];
-    int pasi = 0;
-    char afisaj[6];
-    string convertitor;
-    int ebun = 0;
-    strcpy(incerc, cuvant_incercat.c_str());
-    pls[incerc]++;
-    if (pls[incerc] == 1)
-        pasi++;
+    used_words[""]++;  ///aici tre sa vad daca read_words mapa de words_matrixinte folosite la WHILE
+    char try_word_converted[6];
+    char word_review[6];
+    string converter;
+    strcpy(try_word_converted, try_word.c_str());
+    used_words[try_word_converted]++;
 
-    
     for (int i = 0; i <= 4; ++i)
     {
-        if (incerc[i] == solutie[i])
-            afisaj[i] = 'C';
-        else if (apar[incerc[i]])
-            afisaj[i] = 'A';
+        if (try_word_converted[i] == solution_word[i])
+            word_review[i] = 'C';
+        else if (frequnce_array_letters[try_word_converted[i]])
+            word_review[i] = 'A';
         else
-            afisaj[i] = 'G';
+            word_review[i] = 'G';
     }
-    convertitor = afisaj;
-    return convertitor;
+    converter = word_review;
+    return converter;
 }
 
-void Genereaza_Cuvant()
+void Generate_Random_Word()
 {
 
     srand(time(NULL));
 
-    bag();
+    Read_words();
 
-    genereaza_cuv();
+    Generate_solution();
 
 }

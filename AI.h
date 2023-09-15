@@ -9,190 +9,137 @@
 using namespace std;
 ifstream ffin("cuvinte.in");
 
-int pas = 0;
-int alimita = 11453;
-int alimita2 = 11453;
-char acuv[12000][6];///matricea cu cuvinte
-char acuv2[12000][6];///copie pentru incercari matricea cu cuvinte
-char acuvant_entropic[6];///cuvantul cel mai entropic per stage
-double aentropie_max = 0;///entropia maxima per stage
-double apos_lit[30][6];///posibilitatea [litera]/[pozitie]
-char acopie_cuv[12000][6];
-double pos_lit_tot[30];
-unordered_map<char, int>folosit;
+int number_of_tries = 0;
+int number_of_possible_words = 11453;
+int number_of_total_words = 11453;
+char matrix_with_possbile_words[12000][6];///matricea cu cuvinte
+char matrix_with_all_words[12000][6];///copie pentru incercari matricea cu cuvinte
+char best_word_choice[6];///cuvantul cel mai entropic per stage
+double max_entropy_for_word = 0;///entropia maxima per stage
+double letter_per_position_probability[30][6];///posibilitatea [litera]/[pozitie]
+char copy_matrix[12000][6];
+double posibiliy_for_letter_to_appear_word[30];
+unordered_map<char, int>used_letter;
 
 
-double aentropie(double aposibilitate)///functie de calculat entropia pentru posibilitate
+double calculate_entropy(double probability)///functie de calculat entropia pentru posibilitate
 {
-    return aposibilitate * log2(1 / aposibilitate);
+    return probability * log2(1 / probability);
 }
 
-void abag()///bag cuvintele in matrice
+void insert_words()///bag cuvintele in matrice
 {
-    char acuvant[6];
+    char word[6];
     for (int i = 0; i <= 11453; ++i)
     {
-        ffin >> acuvant;
-        strcpy(acuv[i], acuvant);
-        strcpy(acuv2[i], acuvant);
+        ffin >> word;
+        strcpy(matrix_with_possbile_words[i], word);
+        strcpy(matrix_with_all_words[i], word);
     }
 }
 
 
-
-void abaga_pos()///functia de pus posibilitatile in matrice
-{
-    for (int j = 0; j <= 25; ++j)
-    {
-        for (int k = 0; k <= 4; ++k)
-        {
-            //cout<<char(j+'A')<<" ";
-            double acazf = 0;
-            for (int i = 0; i <= alimita; ++i)
-            {
-                if (acuv[i][k] == j + 'A')
-                    acazf++;
-            }
-            // cout<<cazf<<" ";
-            apos_lit[j][k] = acazf / (alimita + 1);
-        }
-        // cout<<'\n';
-    }
-}
-void baga_pos_2()
+void insert_posibilities()
 {
 
     for (int j = 0; j <= 25; ++j)
     {
-        double caz_2 = 0;
-        for (int i = 0; i <= alimita; ++i)
+        double favorable_case_2 = 0;
+        for (int i = 0; i <= number_of_possible_words; ++i)
         {
-            if (acuv[i][0] == j + 'A' || acuv[i][1] == j + 'A' || acuv[i][2] == j + 'A' || acuv[i][3] == j + 'A' || acuv[i][4] == j + 'A')
-                caz_2++;
+            if (matrix_with_possbile_words[i][0] == j + 'A' || matrix_with_possbile_words[i][1] == j + 'A' || matrix_with_possbile_words[i][2] == j + 'A' || matrix_with_possbile_words[i][3] == j + 'A' || matrix_with_possbile_words[i][4] == j + 'A')
+                favorable_case_2++;
         }
-        pos_lit_tot[j] = caz_2 / (alimita + 1);
+        posibiliy_for_letter_to_appear_word[j] = favorable_case_2 / (number_of_possible_words + 1);
     }
 }
 
 
-void agaseste_entropie()///functia de gasit cel mai bun cuvant entropic per stage
+
+void find_best_word()
 {
-    aentropie_max = 0;
-    if (alimita) {
+    double max_entropy = 0;
+    if (number_of_possible_words) {
 
-
-        for (int i = 0; i <= alimita2; ++i)
-        {
-            double aentrop = 0;
-            for (int j = 0; j <= 4; ++j)
-            {
-                aentrop += aentropie(apos_lit[acuv2[i][j] - 'A'][j]);
-            }
-            if (aentrop > aentropie_max)
-            {
-                aentropie_max = aentrop;
-                strcpy(acuvant_entropic, acuv2[i]);
-            }
-        }
-    }
-    else
-    {
-        strcpy(acuvant_entropic, acuv[0]);
-    }
-
-}
-
-void gaseste_super()
-{
-    double entropie_supermax = 0;
-    if (alimita) {
-
-        strcpy(acuvant_entropic, acuv[0]);
-        for (int i = 0; i <= alimita2; ++i)
+        strcpy(best_word_choice, matrix_with_possbile_words[0]);
+        for (int i = 0; i <= number_of_total_words; ++i)
         {
             for (int j = 0; j <= 25; ++j)
-                folosit[j + 'A'] = 0;
+                used_letter[j + 'A'] = 0;
             double entrop = 0;
             for (int j = 0; j <= 4; ++j)
             {
-                if (folosit[acuv2[i][j]] == 0)
-                    entrop += aentropie(pos_lit_tot[acuv2[i][j] - 'A']);
-                folosit[acuv2[i][j]] = 1;
+                if (used_letter[matrix_with_all_words[i][j]] == 0)
+                    entrop += calculate_entropy(posibiliy_for_letter_to_appear_word[matrix_with_all_words[i][j] - 'A']);
+                used_letter[matrix_with_all_words[i][j]] = 1;
             }
-            if (entrop > entropie_supermax)
+            if (entrop > max_entropy)
             {
-                entropie_supermax = entrop;
-                strcpy(acuvant_entropic, acuv2[i]);
+                max_entropy = entrop;
+                strcpy(best_word_choice, matrix_with_all_words[i]);
             }
         }
     }
     else
     {
-        strcpy(acuvant_entropic, acuv[0]);
+        strcpy(best_word_choice, matrix_with_possbile_words[0]);
     }
-    //cout<<entropie_supermax<<" "<<cuvant_entropic<<'\n'<<'\n';
 }
 
 
-void ataieposibilitati(string aincercatu, string arezultatu)
+void delete_impossible_words(string word_guess, string word_review)
 {
-    int arezul[12000] = { 0 };/// rezul[i] e 1 cand tre sa sterg cuvantul i din lista
+    int unavailable_words[12000] = { 0 };/// rezul[i] e 1 cand tre sa sterg cuvantul i din lista
     for (int i = 0; i <= 4; ++i)
     {
-        if (arezultatu[i] == 'C')///daca e litera buna
-            for (int j = 0; j <= alimita; ++j)
+        if (word_review[i] == 'C')///daca e litera buna
+            for (int j = 0; j <= number_of_possible_words; ++j)
             {
-                if (acuv[j][i] != aincercatu[i])
-                    arezul[j] = 1;
+                if (matrix_with_possbile_words[j][i] != word_guess[i])
+                    unavailable_words[j] = 1;
             }
 
-        if (arezultatu[i] == 'G')///daca e litera gresita
-            for (int j = 0; j <= alimita; ++j)
+        if (word_review[i] == 'G')///daca e litera gresita
+            for (int j = 0; j <= number_of_possible_words; ++j)
             {
                 for (int k = 0; k <= 4; ++k)
-                    if (acuv[j][k] == aincercatu[i])
-                        arezul[j] = 1;
+                    if (matrix_with_possbile_words[j][k] == word_guess[i])
+                        unavailable_words[j] = 1;
             }
 
-        if (arezultatu[i] == 'A')///daca e aprox buna
-            for (int j = 0; j <= alimita; ++j)
+        if (word_review[i] == 'A')///daca e aprox buna
+            for (int j = 0; j <= number_of_possible_words; ++j)
             {
-                if (acuv[j][i] == aincercatu[i])
-                    arezul[j] = 1;
-                int acnt = 0;
+                if (matrix_with_possbile_words[j][i] == word_guess[i])
+                    unavailable_words[j] = 1;
+                int good_letter_bad_place = 0;
                 for (int k = 0; k <= 4; ++k)
-                    if (acuv[j][k] == aincercatu[i])
-                        acnt++;
-                if (acnt == 0)
-                    arezul[j] = 1;
+                    if (matrix_with_possbile_words[j][k] == word_guess[i])
+                        good_letter_bad_place++;
+                if (good_letter_bad_place == 0)
+                    unavailable_words[j] = 1;
             }
     }
-    int agresit = 0;
-    for (int i = 0; i <= alimita; ++i)///stergere efectiva (cum naiba se facea fara vector aditional???)
+    int wrong_words = 0;
+    for (int i = 0; i <= number_of_possible_words; ++i)///stergere efectiva (cum naiba se facea fara vector aditional???)
     {
-        if (!arezul[i])
-            strcpy(acopie_cuv[agresit++], acuv[i]);
+        if (!unavailable_words[i])
+            strcpy(copy_matrix[wrong_words++], matrix_with_possbile_words[i]);
     }
-    alimita = agresit - 1;
-    for (int i = 0; i <= alimita; ++i)
-        strcpy(acuv[i], acopie_cuv[i]);
+    number_of_possible_words = wrong_words - 1;
+    for (int i = 0; i <= number_of_possible_words; ++i)
+        strcpy(matrix_with_possbile_words[i], copy_matrix[i]);
 
-    /*for(int i=0;i<=alimita;++i)
-        cout<<acuv[i]<<'\n';///afisare la cuvinte ramase
-
-        cout<<'\n'<<'\n';*/
 }
 
-///DE FACUT CAND E CCACC SAU CAZURI CU A CAND DEJA EXISTA LITERA!!!
-string start_AI(string arezultat)
+string start_AI(string word_review_result)
 {
-    if (arezultat == "") {
-        abag();
+    if (word_review_result == "") {
+        insert_words();
     }
-    baga_pos_2();
-    gaseste_super();
-    int anumarascrieri = 0;
-    pas++;
-    string best_word = acuvant_entropic;
+    insert_posibilities();
+    find_best_word();
+    number_of_tries++;
+    string best_word = best_word_choice;
     return best_word;
 }

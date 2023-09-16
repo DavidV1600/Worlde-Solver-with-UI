@@ -1,7 +1,7 @@
 # Wordle Solver
 
 ## Preview of the project
-![image](https://github.com/DavidV1600/Worlde-Solver-with-UI/assets/115104357/1588e463-4a35-4e57-9ea4-337e104255b8)
+![Worlde-Game](https://github.com/DavidV1600/Worlde-Solver-with-UI/assets/115104357/cbdb3c6f-98bb-433c-bd67-6b366491307d)
 
 
 ## Description of the Project:

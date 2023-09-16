@@ -1,6 +1,7 @@
 # Wordle Solver
 
 ## Preview of the project
+![image](https://github.com/DavidV1600/Worlde-Solver-with-UI/assets/115104357/1588e463-4a35-4e57-9ea4-337e104255b8)
 
 
 ## Description of the Project:
@@ -10,9 +11,12 @@ The word-finding algorithm is based on information theory, using Shannon's entro
 The algorithm has an average of 4.35 (4.34922) attempts until it finds the correct answer, and it starts guessing with the word "LUTRE."
 
 ## Project Startup
-To run the mode where the game solves itself, two consoles/terminals need to be opened simultaneously. In the first one, run the command "./AI," and then in the other one, run "./JOC."
-To run only the game where the user inputs words, run only the command "./JOC."
-If it doesn't work, try running "g++ main.cpp -o AI" and "g++ main2.cpp -o JOC" first, and then the two commands.
+To run the project you need to simply clone the repo
+   ```sh
+   git clone https://github.com/DavidV1600/Wordle-Solver-with-UI
+   ```
+After that you need to click the compile button inside VS, and if you want to play the game yourself just click the Start button and type 5-letter CAPS LOCK words and click Try Word button.
+If you want to let them bot guess, just check the Bot Activation button and then click Start.
 
 ## References
 https://youtu.be/v68zYyaEmEA,  

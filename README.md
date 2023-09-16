@@ -9,6 +9,7 @@ The word-finding algorithm is based on information theory, using Shannon's entro
 
 ## Average solving time
 The algorithm has an average of 4.35 (4.34922) attempts until it finds the correct answer, and it starts guessing with the word "LUTRE."
+There are a number of 11000+ possible words, which you can find in 'cuvinte.in' file
 
 ## Project Startup
 To run the project you need to simply clone the repo
